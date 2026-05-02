@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>JLPT Tutor — N5 ถึง N1</title>
+<link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <span class="logo">日</span>
+    <div>
+      <h1>JLPT Tutor</h1>
+      <small>ติวสอบวัดระดับภาษาญี่ปุ่น N5 → N1</small>
+    </div>
+  </div>
+  <nav class="levels">
+    <button data-level="N5" class="lvl active">N5</button>
+    <button data-level="N4" class="lvl">N4</button>
+    <button data-level="N3" class="lvl">N3</button>
+    <button data-level="N2" class="lvl">N2</button>
+    <button data-level="N1" class="lvl">N1</button>
+  </nav>
+</header>
+
+<nav class="tabs">
+  <button data-tab="vocab" class="tab active">📖 คำศัพท์</button>
+  <button data-tab="kanji" class="tab">漢 คันจิ</button>
+  <button data-tab="grammar" class="tab">📝 ไวยากรณ์</button>
+  <button data-tab="reading" class="tab">📚 บทอ่าน</button>
+  <button data-tab="mock" class="tab">🧪 Mock Exam</button>
+  <button data-tab="stats" class="tab">📊 สถิติ</button>
+</nav>
+
+<main id="content">
+  <div class="loading">กำลังโหลด…</div>
+</main>
+
+<!-- Card template -->
+<template id="card-template">
+  <div class="card" data-revealed="false">
+    <div class="card-front">
+      <div class="jp"></div>
+      <div class="reading hidden"></div>
+      <button class="reveal-btn">เฉลย ▾</button>
+    </div>
+    <div class="card-back hidden">
+      <div class="meaning"></div>
+      <div class="romaji"></div>
+      <div class="examples"></div>
+    </div>
+  </div>
+</template>
+
+<footer>
+  <small>ข้อมูลในแอปนี้เป็นชุดตัวอย่างเพื่อการศึกษา · ขยายข้อมูลได้ที่ <code>data/*.js</code></small>
+</footer>
+
+<!-- Data: vocabulary -->
+<script src="data/vocab-n5.js"></script>
+<script src="data/vocab-n4.js"></script>
+<script src="data/vocab-n3.js"></script>
+<script src="data/vocab-n2.js"></script>
+<script src="data/vocab-n1.js"></script>
+<!-- Data: kanji -->
+<script src="data/kanji-n5.js"></script>
+<script src="data/kanji-n4.js"></script>
+<script src="data/kanji-n3.js"></script>
+<script src="data/kanji-n2.js"></script>
+<script src="data/kanji-n1.js"></script>
+<!-- Data: grammar -->
+<script src="data/grammar-n5.js"></script>
+<script src="data/grammar-n4.js"></script>
+<script src="data/grammar-n3.js"></script>
+<script src="data/grammar-n2.js"></script>
+<script src="data/grammar-n1.js"></script>
+<!-- Data: reading -->
+<script src="data/reading.js"></script>
+<!-- Data: mock exams -->
+<script src="data/mock.js"></script>
+<!-- App -->
+<script src="js/app.js"></script>
+</body>
+</html>

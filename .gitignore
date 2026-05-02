@@ -1,0 +1,20 @@
+# OS / Editor
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+*~
+
+# IDE / Editors
+.idea/
+.vscode/
+*.sublime-*
+
+# Logs / temp
+*.log
+*.tmp
+*.bak
+
+# Claude Code session data
+.claude/

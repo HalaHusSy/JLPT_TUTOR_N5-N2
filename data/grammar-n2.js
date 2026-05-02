@@ -1,0 +1,62 @@
+window.grammarN2 = [
+  { title: "～にもかかわらず", pattern: "N/[plain] + にもかかわらず", meaning: "ถึงแม้ว่า..., ทั้งๆ ที่... (เป็นทางการ)", examples: [
+    { jp: "雨にもかかわらず、試合は行われた。", romaji: "Ame ni mo kakawarazu, shiai wa okonawareta.", th: "ทั้งฝนตกก็ยังจัดแข่งขัน" },
+    { jp: "努力したにもかかわらず、失敗した。", romaji: "Doryoku shita ni mo kakawarazu, shippai shita.", th: "ทั้งพยายามก็ยังล้มเหลว" },
+    { jp: "若いにもかかわらず実力がある。", romaji: "Wakai ni mo kakawarazu jitsuryoku ga aru.", th: "ทั้งอายุน้อยก็ยังเก่ง" },
+  ]},
+  { title: "～たとたん", pattern: "V-た + とたん(に)", meaning: "ทันทีที่..., พอ...ก็...", examples: [
+    { jp: "家を出たとたんに雨が降ってきた。", romaji: "Ie o deta totan ni ame ga futte kita.", th: "พอออกจากบ้านฝนก็ตกเลย" },
+    { jp: "彼を見たとたんに泣き出した。", romaji: "Kare o mita totan ni nakidashita.", th: "พอเห็นเขาก็ร้องไห้" },
+    { jp: "ベルが鳴ったとたん、皆走り出した。", romaji: "Beru ga natta totan, mina hashiridashita.", th: "พอกระดิ่งดังทุกคนก็วิ่งออกไป" },
+  ]},
+  { title: "～うちに / ～ないうちに", pattern: "[plain] + うちに / V-ない + うちに", meaning: "ในระหว่างที่ยัง... / ก่อนที่จะ...", examples: [
+    { jp: "若いうちにいろいろな経験をしたい。", romaji: "Wakai uchi ni iroiro na keiken o shitai.", th: "อยากได้ประสบการณ์ตอนยังหนุ่มสาว" },
+    { jp: "雨が降らないうちに帰りましょう。", romaji: "Ame ga furanai uchi ni kaerimashou.", th: "กลับก่อนฝนจะตก" },
+    { jp: "暑くないうちに出かける。", romaji: "Atsukunai uchi ni dekakeru.", th: "ออกไปตอนยังไม่ร้อน" },
+  ]},
+  { title: "～にとって", pattern: "N + にとって", meaning: "สำหรับ..., ในมุมของ...", examples: [
+    { jp: "私にとって家族が一番大切です。", romaji: "Watashi ni totte kazoku ga ichiban taisetsu desu.", th: "สำหรับฉันครอบครัวสำคัญที่สุด" },
+    { jp: "学生にとって試験は大変です。", romaji: "Gakusei ni totte shiken wa taihen desu.", th: "สำหรับนักเรียนการสอบเป็นเรื่องหนัก" },
+    { jp: "外国人にとって漢字は難しい。", romaji: "Gaikokujin ni totte kanji wa muzukashii.", th: "คันจิยากสำหรับชาวต่างชาติ" },
+  ]},
+  { title: "～に関して / ～について", pattern: "N + に関して/について", meaning: "เกี่ยวกับ..., ในเรื่อง...", examples: [
+    { jp: "この問題に関して話し合いましょう。", romaji: "Kono mondai ni kanshite hanashi-aimashou.", th: "มาคุยเรื่องปัญหานี้กัน" },
+    { jp: "歴史について本を書きました。", romaji: "Rekishi ni tsuite hon o kakimashita.", th: "เขียนหนังสือเกี่ยวกับประวัติศาสตร์" },
+    { jp: "事故に関して調査中です。", romaji: "Jiko ni kanshite chousa chuu desu.", th: "กำลังสอบสวนเรื่องอุบัติเหตุ" },
+  ]},
+  { title: "～ほど", pattern: "N/V + ほど", meaning: "ขนาด..., เท่ากับ...", examples: [
+    { jp: "死ぬほど疲れた。", romaji: "Shinu hodo tsukareta.", th: "เหนื่อยจนแทบตาย" },
+    { jp: "彼ほど親切な人はいない。", romaji: "Kare hodo shinsetsu na hito wa inai.", th: "ไม่มีใครใจดีเท่าเขา" },
+    { jp: "今日は昨日ほど寒くない。", romaji: "Kyou wa kinou hodo samukunai.", th: "วันนี้ไม่หนาวเท่าเมื่อวาน" },
+  ]},
+  { title: "～ものだ", pattern: "[plain] + ものだ", meaning: "เป็นเรื่องธรรมดาที่..., มักจะ...", examples: [
+    { jp: "子供は元気なものだ。", romaji: "Kodomo wa genki na mono da.", th: "เด็กก็ต้องสดใสเป็นธรรมดา" },
+    { jp: "時間が経つのは早いものだ。", romaji: "Jikan ga tatsu no wa hayai mono da.", th: "เวลาผ่านไปไวจัง" },
+    { jp: "若い頃はよく遊んだものだ。", romaji: "Wakai koro wa yoku asonda mono da.", th: "ตอนเด็กๆ มักจะเล่นบ่อย" },
+  ]},
+  { title: "～ものだから / ～から", pattern: "[plain] + ものだから", meaning: "เพราะ...เลย, ก็เพราะว่า...", examples: [
+    { jp: "急いでいたものだから、忘れてしまった。", romaji: "Isoide ita mono dakara, wasurete shimatta.", th: "เพราะรีบเลยลืม" },
+    { jp: "雨が降っていたものだから遅れました。", romaji: "Ame ga futte ita mono dakara okuremashita.", th: "เพราะฝนตกเลยมาช้า" },
+    { jp: "知らなかったものですから。", romaji: "Shiranakatta mono desu kara.", th: "เพราะไม่รู้น่ะ" },
+  ]},
+  { title: "～わりに", pattern: "[plain] + わりに", meaning: "เมื่อเทียบกับ..., ขึ้นกับ...", examples: [
+    { jp: "値段のわりに美味しい。", romaji: "Nedan no wari ni oishii.", th: "เทียบราคาแล้วอร่อย" },
+    { jp: "勉強しないわりに成績がいい。", romaji: "Benkyou shinai wari ni seiseki ga ii.", th: "ไม่ค่อยอ่านหนังสือแต่ผลการเรียนดี" },
+    { jp: "若いわりにしっかりしている。", romaji: "Wakai wari ni shikkari shite iru.", th: "เด็กแต่หนักแน่น" },
+  ]},
+  { title: "～せい", pattern: "N の/[plain] + せい", meaning: "เพราะ... (ในแง่ลบ — โทษ)", examples: [
+    { jp: "雨のせいで遅れました。", romaji: "Ame no sei de okuremashita.", th: "สายเพราะฝน" },
+    { jp: "私のせいです。", romaji: "Watashi no sei desu.", th: "เป็นความผิดของฉัน" },
+    { jp: "失敗したのは彼のせいだ。", romaji: "Shippai shita no wa kare no sei da.", th: "ที่พลาดเป็นเพราะเขา" },
+  ]},
+  { title: "～おかげで", pattern: "N の/[plain] + おかげで", meaning: "ด้วยความที่..., ขอบคุณที่... (ในแง่บวก)", examples: [
+    { jp: "あなたのおかげで成功しました。", romaji: "Anata no okage de seikou shimashita.", th: "สำเร็จเพราะคุณ" },
+    { jp: "天気がいいおかげで楽しかった。", romaji: "Tenki ga ii okage de tanoshikatta.", th: "อากาศดีเลยสนุก" },
+    { jp: "おかげさまで元気です。", romaji: "Okage-sama de genki desu.", th: "ขอบคุณ ฉันสบายดี" },
+  ]},
+  { title: "～最中に", pattern: "[plain] + 最中に", meaning: "ขณะที่กำลัง...อยู่", examples: [
+    { jp: "会議の最中に電話が鳴った。", romaji: "Kaigi no saichuu ni denwa ga natta.", th: "มีโทรศัพท์ดังขณะประชุม" },
+    { jp: "勉強している最中です。", romaji: "Benkyou shite iru saichuu desu.", th: "กำลังเรียนอยู่" },
+    { jp: "話している最中に邪魔しないで。", romaji: "Hanashite iru saichuu ni jama shinaide.", th: "อย่ามาขัดขณะคุย" },
+  ]},
+];
