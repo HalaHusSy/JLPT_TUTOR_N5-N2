@@ -30,7 +30,18 @@
 
   function getDataset(kind, level) {
     const key = `${kind}${level}`;
-    return window[key] || [];
+    const arr = window[key] || [];
+    // Dedupe by primary key (word for vocab, char for kanji, pattern for grammar)
+    const seen = new Set();
+    const keyField = kind === "kanji" ? "char" : kind === "grammar" ? "pattern" : "word";
+    const out = [];
+    for (const item of arr) {
+      const k = item[keyField];
+      if (k && seen.has(k)) continue;
+      if (k) seen.add(k);
+      out.push(item);
+    }
+    return out;
   }
 
   function saveProgress() {
