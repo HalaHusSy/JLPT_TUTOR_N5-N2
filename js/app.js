@@ -600,12 +600,27 @@
     return _pastPapersCache;
   }
 
+  // Transcribed (OCR'd) past-paper questions → interactive quizzes. Local-only.
+  let _ppQuizCache;
+  async function loadPastPapersQuiz() {
+    if (_ppQuizCache !== undefined) return _ppQuizCache;
+    try {
+      const r = await fetch("data/pastpapers-quiz.local.json");
+      _ppQuizCache = r.ok ? await r.json() : null;
+    } catch (e) {
+      _ppQuizCache = null;
+    }
+    return _ppQuizCache;
+  }
+
   async function renderPastPapers(main) {
     main.innerHTML = "";
     main.appendChild(el("h2", {}, `📂 ข้อสอบจริง (真题) — ${state.level}`));
 
     const data = await loadPastPapers();
     const groups = data && data.levels && data.levels[state.level];
+    const quizData = await loadPastPapersQuiz();
+    const quizForLevel = (quizData && quizData[state.level]) || {};
 
     if (!groups || !groups.length) {
       const box = el("div", { class: "empty" });
@@ -622,6 +637,18 @@
     groups.forEach((g) => {
       const row = el("div", { class: "row" });
       row.appendChild(el("h3", {}, `📁 ${g.group}`));
+
+      // If this exam has a transcribed interactive quiz, offer to launch it.
+      const quiz = quizForLevel[g.group];
+      if (quiz) {
+        const qn = flattenExam(quiz).length;
+        const btn = el("button", {
+          style: "display:inline-block;margin:2px 0 12px;padding:9px 16px;background:var(--accent);color:#fff;border:none;border-radius:8px;font-weight:700;cursor:pointer;font-size:13px",
+        }, `▶ ทำเป็นข้อสอบ interactive (${qn} ข้อ · กดเฉลยได้)`);
+        btn.addEventListener("click", () => startMockExam(quiz));
+        row.appendChild(btn);
+      }
+
       let lastLabel = null;
       g.files.forEach((f) => {
         if (f.label !== lastLabel) {
