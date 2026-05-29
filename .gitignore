@@ -21,3 +21,6 @@ desktop.ini
 
 # Source PDFs (copyrighted material — not for redistribution)
 pdf_source/
+
+# Data-generation audit artifacts (not runtime data)
+data/*.audit.json

@@ -57,43 +57,11 @@
   <small>ข้อมูลในแอปนี้เป็นชุดตัวอย่างเพื่อการศึกษา · ขยายข้อมูลได้ที่ <code>data/*.js</code></small>
 </footer>
 
-<!-- Data: vocabulary -->
-<script src="data/vocab-n5.js"></script>
-<script src="data/vocab-n5-pdf-a.js"></script>
-<script src="data/vocab-n5-pdf-k.js"></script>
-<script src="data/vocab-n5-pdf-s.js"></script>
-<script src="data/vocab-n5-pdf-t.js"></script>
-<script src="data/vocab-n5-pdf-n.js"></script>
-<script src="data/vocab-n5-pdf-h.js"></script>
-<script src="data/vocab-n5-pdf-m.js"></script>
-<script src="data/vocab-n5-pdf-extra.js"></script>
-<script src="data/vocab-n4.js"></script>
-<script src="data/vocab-n3.js"></script>
-<script src="data/vocab-n2.js"></script>
-<script src="data/vocab-n1.js"></script>
-<!-- Data: kanji -->
-<script src="data/kanji-n5.js"></script>
-<script src="data/kanji-n5-pdf.js"></script>
-<script src="data/kanji-n5-extra.js"></script>
-<script src="data/kanji-n4.js"></script>
-<script src="data/kanji-n3.js"></script>
-<script src="data/kanji-n2.js"></script>
-<script src="data/kanji-n1.js"></script>
-<!-- Data: grammar -->
-<script src="data/grammar-n5.js"></script>
-<script src="data/grammar-n5-pdf.js"></script>
-<script src="data/grammar-n5-extra.js"></script>
-<script src="data/grammar-n4.js"></script>
-<script src="data/grammar-n3.js"></script>
-<script src="data/grammar-n2.js"></script>
-<script src="data/grammar-n1.js"></script>
-<!-- Data: reading -->
-<script src="data/reading.js"></script>
-<script src="data/reading-n5-pdf.js"></script>
-<script src="data/reading-n5-extra.js"></script>
-<!-- Data: mock exams -->
-<script src="data/mock.js"></script>
-<!-- App -->
+<!--
+  Data is now lazy-loaded as JSON via fetch() in js/app.js (see loadDataset()).
+  Source: data/<kind>/<level>.json   (kind = vocab | kanji | grammar | reading | mock)
+  Regenerate from the legacy data/*.js files with: node tools/convert_to_json.js
+-->
 <script src="js/app.js"></script>
 </body>
 </html>

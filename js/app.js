@@ -28,20 +28,36 @@
     return e;
   };
 
-  function getDataset(kind, level) {
-    const key = `${kind}${level}`;
-    const arr = window[key] || [];
-    // Dedupe by primary key (word for vocab, char for kanji, pattern for grammar)
-    const seen = new Set();
-    const keyField = kind === "kanji" ? "char" : kind === "grammar" ? "pattern" : "word";
-    const out = [];
-    for (const item of arr) {
-      const k = item[keyField];
-      if (k && seen.has(k)) continue;
-      if (k) seen.add(k);
-      out.push(item);
-    }
-    return out;
+  // -------- DATA LOADING (lazy-load JSON per kind+level, cached in memory) --------
+  // Replaces the legacy "load all 55 .js files via <script> tags" approach.
+  // Each dataset is fetched once on first access and cached. Dedupe is now done
+  // by the build script (tools/convert_to_json.js), so this is a pure loader.
+  const dataCache = new Map();
+  const inflight = new Map();
+
+  async function loadDataset(kind, level) {
+    const key = `${kind}-${level}`;
+    if (dataCache.has(key)) return dataCache.get(key);
+    if (inflight.has(key)) return inflight.get(key);
+    const url = `data/${kind}/${level.toLowerCase()}.json`;
+    const p = fetch(url).then(async (r) => {
+      if (!r.ok) throw new Error(`HTTP ${r.status} for ${url}`);
+      const data = await r.json();
+      dataCache.set(key, data);
+      inflight.delete(key);
+      return data;
+    }).catch((e) => {
+      console.error(`loadDataset failed: ${url}`, e);
+      dataCache.set(key, []);
+      inflight.delete(key);
+      return [];
+    });
+    inflight.set(key, p);
+    return p;
+  }
+
+  function showLoading(main) {
+    main.innerHTML = '<div class="loading">กำลังโหลด…</div>';
   }
 
   function saveProgress() {
@@ -56,20 +72,23 @@
   }
 
   // -------- ROUTER --------
-  function render() {
+  // Each render fn is async because it fetches its dataset on demand.
+  // We show a loading placeholder immediately so the UI never appears frozen.
+  async function render() {
     const main = $("#content");
-    main.innerHTML = "";
-    if (state.tab === "vocab") renderVocab(main);
-    else if (state.tab === "kanji") renderKanji(main);
-    else if (state.tab === "grammar") renderGrammar(main);
-    else if (state.tab === "reading") renderReading(main);
-    else if (state.tab === "mock") renderMock(main);
-    else if (state.tab === "stats") renderStats(main);
+    showLoading(main);
+    if (state.tab === "vocab") await renderVocab(main);
+    else if (state.tab === "kanji") await renderKanji(main);
+    else if (state.tab === "grammar") await renderGrammar(main);
+    else if (state.tab === "reading") await renderReading(main);
+    else if (state.tab === "mock") await renderMock(main);
+    else if (state.tab === "stats") await renderStats(main);
   }
 
   // -------- VOCAB --------
-  function renderVocab(main) {
-    const data = getDataset("vocab", state.level);
+  async function renderVocab(main) {
+    const data = await loadDataset("vocab", state.level);
+    main.innerHTML = "";
     const filtered = filterItems(data, state.search, ["word", "reading", "romaji", "meaning"]);
 
     main.appendChild(makeToolbar({
@@ -128,8 +147,9 @@
   }
 
   // -------- KANJI --------
-  function renderKanji(main) {
-    const data = getDataset("kanji", state.level);
+  async function renderKanji(main) {
+    const data = await loadDataset("kanji", state.level);
+    main.innerHTML = "";
     const filtered = filterItems(data, state.search, ["char", "on", "kun", "meaning"]);
 
     main.appendChild(makeToolbar({
@@ -191,8 +211,9 @@
   }
 
   // -------- GRAMMAR --------
-  function renderGrammar(main) {
-    const data = getDataset("grammar", state.level);
+  async function renderGrammar(main) {
+    const data = await loadDataset("grammar", state.level);
+    main.innerHTML = "";
     const filtered = filterItems(data, state.search, ["pattern", "title", "meaning"]);
 
     main.appendChild(makeToolbar({
@@ -229,9 +250,9 @@
   }
 
   // -------- READING --------
-  function renderReading(main) {
-    const all = window.READINGS || {};
-    const arr = all[state.level] || [];
+  async function renderReading(main) {
+    const arr = await loadDataset("reading", state.level);
+    main.innerHTML = "";
 
     main.appendChild(makeToolbar({
       placeholder: "ค้นหาบทอ่าน…",
@@ -272,8 +293,9 @@
   }
 
   // -------- MOCK EXAM --------
-  function renderMock(main) {
-    const exams = (window.MOCK_EXAMS || {})[state.level] || [];
+  async function renderMock(main) {
+    const exams = await loadDataset("mock", state.level);
+    main.innerHTML = "";
 
     if (!exams.length) {
       main.appendChild(el("div", { class: "empty" }, `ยังไม่มี Mock Exam สำหรับ ${state.level}`));
@@ -531,16 +553,23 @@
   }
 
   // -------- STATS --------
-  function renderStats(main) {
+  async function renderStats(main) {
+    // Load every level's vocab+kanji in parallel to compute totals.
+    // Once cached, subsequent visits to Stats are instant.
+    const levels = ["N5", "N4", "N3", "N2", "N1"];
+    const totals = await Promise.all(levels.flatMap((lv) => [
+      loadDataset("vocab", lv),
+      loadDataset("kanji", lv),
+    ]));
+    main.innerHTML = "";
     main.appendChild(el("h2", {}, "📊 สถิติของคุณ"));
     const grid = el("div", { class: "stats-grid" });
-    const levels = ["N5", "N4", "N3", "N2", "N1"];
     let total = 0, studied = 0;
-    levels.forEach((lv) => {
+    levels.forEach((lv, i) => {
       const vKey = `vocab-${lv}`;
       const kKey = `kanji-${lv}`;
-      const vTotal = (window["vocab" + lv] || []).length;
-      const kTotal = (window["kanji" + lv] || []).length;
+      const vTotal = totals[i * 2].length;
+      const kTotal = totals[i * 2 + 1].length;
       const vStudied = Object.keys(state.progress[vKey] || {}).length;
       const kStudied = Object.keys(state.progress[kKey] || {}).length;
       total += vTotal + kTotal;
