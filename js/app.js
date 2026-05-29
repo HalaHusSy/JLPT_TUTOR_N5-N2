@@ -310,11 +310,47 @@
     exams.forEach((exam) => {
       const card = el("div", { class: "mock-card" });
       card.appendChild(el("h4", {}, exam.title));
-      card.appendChild(el("small", {}, `${exam.questions.length} ข้อ`));
+      card.appendChild(el("small", {}, `${countExamQuestions(exam)} ข้อ`));
       card.addEventListener("click", () => startMockExam(exam));
       list.appendChild(card);
     });
     main.appendChild(list);
+  }
+
+  // Flatten a mock exam to its question list, supporting both the legacy
+  // { questions: [...] } shape and the sectioned { sections: [{name, instruction, questions}] } shape.
+  function flattenExam(exam) {
+    if (Array.isArray(exam.sections)) {
+      return exam.sections.reduce((acc, s) => acc.concat(s.questions || []), []);
+    }
+    return exam.questions || [];
+  }
+  function countExamQuestions(exam) {
+    return flattenExam(exam).length;
+  }
+
+  // Render the exam body (section headers + questions) into `wrap`.
+  // Question numbering and the `answers` map use a continuous global index.
+  function renderExamBody(exam, wrap, answers, showAnswer) {
+    const sections = Array.isArray(exam.sections)
+      ? exam.sections
+      : [{ questions: exam.questions || [] }];
+    let idx = 0;
+    sections.forEach((sec) => {
+      if (sec.name || sec.instruction) {
+        const head = el("div", { class: "section-head" });
+        if (sec.name) head.appendChild(el("div", { class: "section-name" }, sec.name));
+        if (sec.instruction) head.appendChild(el("div", { class: "section-instr" }, sec.instruction));
+        wrap.appendChild(head);
+      }
+      if (sec.passage) {
+        wrap.appendChild(el("div", { class: "exam-passage", html: sec.passage }));
+      }
+      (sec.questions || []).forEach((q) => {
+        idx++;
+        wrap.appendChild(makeExamQuestion(q, idx, answers, showAnswer));
+      });
+    });
   }
 
   function startMockExam(exam) {
@@ -324,14 +360,13 @@
     back.addEventListener("click", () => render());
     main.appendChild(back);
     main.appendChild(el("h2", {}, exam.title));
+    const flat = flattenExam(exam);
     main.appendChild(el("p", { class: "desc", style: "color:var(--muted)" },
-      `${exam.questions.length} ข้อ · ตอบให้ครบแล้วกด "ส่งคำตอบ"`));
+      `${flat.length} ข้อ · ตอบให้ครบแล้วกด "ส่งคำตอบ"`));
 
     const answers = {};
     const wrap = el("div", {});
-    exam.questions.forEach((q, i) => {
-      wrap.appendChild(makeExamQuestion(q, i + 1, answers, false));
-    });
+    renderExamBody(exam, wrap, answers, false);
     main.appendChild(wrap);
 
     const submit = el("button", {
@@ -339,21 +374,19 @@
     }, "✓ ส่งคำตอบและดูเฉลย");
     submit.addEventListener("click", () => {
       let correct = 0;
-      exam.questions.forEach((q, i) => {
+      flat.forEach((q, i) => {
         if (answers[i] === q.answer) correct++;
       });
       const result = el("div", { class: "exam-result" });
       result.appendChild(el("h3", {}, "ผลคะแนน"));
-      const pct = Math.round((correct / exam.questions.length) * 100);
-      result.appendChild(el("div", { class: "score" }, `${correct} / ${exam.questions.length}`));
+      const pct = Math.round((correct / flat.length) * 100);
+      result.appendChild(el("div", { class: "score" }, `${correct} / ${flat.length}`));
       result.appendChild(el("div", { class: "desc" }, `${pct}% — ${pct >= 70 ? "ผ่าน 🎉" : pct >= 50 ? "ใกล้ผ่านแล้ว 💪" : "ฝึกต่อไปนะ 📚"}`));
       main.insertBefore(result, wrap);
 
       // re-render with answers shown
       wrap.innerHTML = "";
-      exam.questions.forEach((q, i) => {
-        wrap.appendChild(makeExamQuestion(q, i + 1, answers, true));
-      });
+      renderExamBody(exam, wrap, answers, true);
       submit.remove();
       window.scrollTo({ top: 0, behavior: "smooth" });
     });

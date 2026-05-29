@@ -261,6 +261,40 @@ main {
 .mock-card h4 { margin: 0; font-size: 18px; }
 .mock-card small { color: var(--muted); }
 
+.section-head {
+  margin: 22px 0 10px;
+  padding: 10px 14px;
+  background: linear-gradient(135deg, rgba(255,87,87,.14), rgba(77,171,247,.14));
+  border-left: 4px solid var(--accent);
+  border-radius: 8px;
+}
+.section-head:first-child { margin-top: 0; }
+.section-name {
+  font-family: var(--jp-font);
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--text);
+}
+.section-instr {
+  font-family: var(--jp-font);
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 4px;
+}
+
+.exam-passage {
+  background: var(--bg2);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 18px 20px;
+  margin-bottom: 14px;
+  font-family: var(--jp-font);
+  font-size: 16px;
+  line-height: 2;
+  color: var(--text);
+  white-space: pre-wrap;
+}
+
 .exam-question {
   background: var(--card);
   border: 1px solid var(--line);
