@@ -82,6 +82,7 @@
     else if (state.tab === "grammar") await renderGrammar(main);
     else if (state.tab === "reading") await renderReading(main);
     else if (state.tab === "mock") await renderMock(main);
+    else if (state.tab === "pastpapers") await renderPastPapers(main);
     else if (state.tab === "stats") await renderStats(main);
   }
 
@@ -586,6 +587,66 @@
   }
 
   // -------- STATS --------
+  // -------- PAST PAPERS (local-only) --------
+  let _pastPapersCache;
+  async function loadPastPapers() {
+    if (_pastPapersCache !== undefined) return _pastPapersCache;
+    try {
+      const r = await fetch("data/pastpapers.local.json");
+      _pastPapersCache = r.ok ? await r.json() : null;
+    } catch (e) {
+      _pastPapersCache = null;
+    }
+    return _pastPapersCache;
+  }
+
+  async function renderPastPapers(main) {
+    main.innerHTML = "";
+    main.appendChild(el("h2", {}, `📂 ข้อสอบจริง (真题) — ${state.level}`));
+
+    const data = await loadPastPapers();
+    const groups = data && data.levels && data.levels[state.level];
+
+    if (!groups || !groups.length) {
+      const box = el("div", { class: "empty" });
+      box.appendChild(el("p", {}, "ยังไม่มีดัชนีข้อสอบจริงในเครื่องนี้ (หรือไม่มีไฟล์ระดับนี้)"));
+      box.appendChild(el("p", { class: "desc" , style:"color:var(--muted)"},
+        "วางไฟล์ไว้ใน pdf_source/mock_exam/ แล้วรัน:  node tools/scan_pastpapers.js"));
+      main.appendChild(box);
+      return;
+    }
+
+    main.appendChild(el("p", { class: "desc", style: "color:var(--muted)" },
+      "⚠️ ไฟล์ลิขสิทธิ์ JEES — โหมดนี้ใช้ดู/ฟังในเครื่องส่วนตัวเท่านั้น (ไม่ถูก push ขึ้น GitHub) · เปิด PDF/เล่นเสียงได้เลย"));
+
+    groups.forEach((g) => {
+      const row = el("div", { class: "row" });
+      row.appendChild(el("h3", {}, `📁 ${g.group}`));
+      let lastLabel = null;
+      g.files.forEach((f) => {
+        if (f.label !== lastLabel) {
+          row.appendChild(el("div", { class: "section-instr", style: "margin:10px 0 4px;font-weight:600" }, f.label));
+          lastLabel = f.label;
+        }
+        const url = encodeURI(f.path);
+        if (f.kind === "audio") {
+          const wrap = el("div", { style: "margin:4px 0 10px" });
+          wrap.appendChild(el("div", { class: "ex-rom", style: "font-size:12px;margin-bottom:2px" }, "🔊 " + f.name));
+          const audio = el("audio", { controls: "", preload: "none", src: url, style: "width:100%;max-width:420px" });
+          wrap.appendChild(audio);
+          row.appendChild(wrap);
+        } else {
+          const a = el("a", {
+            href: url, target: "_blank", rel: "noopener",
+            style: "display:block;padding:8px 12px;margin:4px 0;background:var(--bg2);border:1px solid var(--line);border-radius:8px;color:var(--accent2);text-decoration:none;font-size:13px",
+          }, `${f.label.startsWith("📄") || f.label.startsWith("✅") || f.label.startsWith("📝") ? "" : "📄 "}${f.name}  ↗`);
+          row.appendChild(a);
+        }
+      });
+      main.appendChild(row);
+    });
+  }
+
   async function renderStats(main) {
     // Load every level's vocab+kanji in parallel to compute totals.
     // Once cached, subsequent visits to Stats are instant.

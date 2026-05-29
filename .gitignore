@@ -24,3 +24,6 @@ pdf_source/
 
 # Data-generation audit artifacts (not runtime data)
 data/*.audit.json
+
+# Local-only data referencing copyrighted past papers (never pushed)
+data/*.local.json
