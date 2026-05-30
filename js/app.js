@@ -344,6 +344,14 @@
         if (sec.instruction) head.appendChild(el("div", { class: "section-instr" }, sec.instruction));
         wrap.appendChild(head);
       }
+      // Sectioned listening: one MP3 covers all questions in this 問題.
+      if (sec.audio_src) {
+        const audioWrap = el("div", { style: "margin:8px 0 14px" });
+        audioWrap.appendChild(el("div", { class: "ex-rom", style: "font-size:12px;margin-bottom:4px;color:var(--muted)" },
+          "🔊 ฟังเสียงทั้ง問題แล้วตอบทีละข้อตามลำดับ"));
+        audioWrap.appendChild(el("audio", { controls: "", preload: "none", src: encodeURI(sec.audio_src), style: "width:100%;max-width:520px" }));
+        wrap.appendChild(audioWrap);
+      }
       if (sec.passage) {
         wrap.appendChild(el("div", { class: "exam-passage", html: sec.passage }));
       }
